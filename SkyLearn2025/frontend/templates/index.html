@@ -1,0 +1,364 @@
+<!-- 
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SkyLearn — Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0056A0; /* Deep aviation blue */
+      --secondary-color: #87CEEB; /* Sky blue */
+      --accent-color: #003F7A; /* Darker blue */
+      --text-color: #333333;
+      --bg-color: #F5F8FA; /* Light gray-blue */
+      --chat-bg: rgba(255, 255, 255, 0.95);
+      --border-color: #A9C7E0;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      max-width: 900px;
+      margin: 20px auto;
+      background-image: url('https://wallpapers.com/images/featured/plane-desktop-yms31u8wyuke7ari.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .logo-left, .logo-right {
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: auto;
+    }
+    .logo-left {
+      left: 0;
+    }
+    .logo-right {
+      right: 0;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    h2 img {
+      width: 40px;
+      height: auto;
+    }
+    #chat {
+      border: 1px solid var(--border-color);
+      padding: 15px;
+      height: 60vh;
+      overflow-y: auto;
+      background: var(--chat-bg);
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+    }
+    .msg {
+      margin: 12px 0;
+      padding: 12px 16px;
+      border-radius: 20px;
+      max-width: 75%;
+      position: relative;
+      font-size: 1em;
+    }
+    .user {
+      text-align: right;
+      color: #006400; /* Dark green */
+      background: #E0FFE0; /* Light green */
+      margin-left: auto;
+    }
+    .bot {
+      text-align: left;
+      color: var(--primary-color);
+      background: #E0F6FF; /* Light blue */
+      margin-right: auto;
+    }
+    .bot::before {
+      content: '';
+      background: url('https://cdn-icons-png.flaticon.com/512/31/31069.png') no-repeat center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .source {
+      font-size: 0.85em;
+      color: #666;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+    #input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #FFFFFF;
+      resize: vertical;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1em;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    #controls {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+    button:hover {
+      background: var(--accent-color);
+      transform: translateY(-2px);
+    }
+    label {
+      display: flex;
+      align-items: center;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    input[type="number"] {
+      width: 60px;
+      margin-left: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px;
+      font-size: 1em;
+    }
+    #header-image {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo-left" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/%D8%A3%D8%B1%D9%83%D8%A7%D9%86_%D8%AC%D9%8A%D8%B4_%D8%A7%D9%84%D8%B7%D9%8A%D8%B1%D8%A7%D9%86%D8%8C_%D8%AA%D9%88%D9%86%D8%B3.svg" alt="Tunisian Air Force Emblem">
+    <img class="logo-right" src="https://upload.wikimedia.org/wikipedia/commons/9/91/%D8%B4%D8%B9%D8%A7%D8%B1_%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%AA_%D8%A7%D9%84%D9%85%D8%B3%D9%84%D8%AD%D8%A9_%D8%A7%D9%84%D8%AA%D9%88%D9%86%D8%B3%D9%8A%D8%A9.png" alt="Tunisian Armed Forces Emblem">
+    <img id="header-image" src="https://csis-website-prod.s3.amazonaws.com/s3fs-public/publication/201203_Airforce.jpg" alt="Cockpit Dashboard">
+    <h2>
+      <img src="https://cdn-icons-png.flaticon.com/512/31/31069.png" alt="Airplane Icon">
+      SkyLearn — Chatbot
+      <img src="https://cdn-icons-png.flaticon.com/512/31/31069.png" alt="Airplane Icon">
+    </h2>
+  </header>
+  <div id="chat"></div>
+
+  <textarea id="input" rows="3" placeholder="Pose ta question sur l'aviation..."></textarea>
+  <div id="controls">
+    <button id="sendBtn">Envoyer</button>
+    <label>Top-k: <input id="topk" type="number" value="5" min="1" max="10"></label>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html> -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SkyLearn — Chatbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0056A0; /* Deep aviation blue */
+      --secondary-color: #87CEEB; /* Sky blue */
+      --accent-color: #003F7A; /* Darker blue */
+      --text-color: #333333;
+      --bg-color: #F5F8FA; /* Light gray-blue */
+      --chat-bg: rgba(255, 255, 255, 0.95);
+      --border-color: #A9C7E0;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      max-width: 900px;
+      margin: 20px auto;
+      background-image: url('https://cdn.wallpapersafari.com/61/68/152LOd.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      line-height: 1.6;
+      position: relative;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo-left, .logo-right {
+      position: fixed;
+      top: 20px;
+      width: 100px;
+      height: auto;
+      z-index: 10;
+    }
+    .logo-left {
+      left: 10px;
+    }
+    .logo-right {
+      right: 10px;
+    }
+    h2 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    h2 img {
+      width: 40px;
+      height: auto;
+    }
+    #chat {
+      border: 1px solid var(--border-color);
+      padding: 15px;
+      height: 60vh;
+      overflow-y: auto;
+      background: var(--chat-bg);
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+    }
+    .msg {
+      margin: 12px 0;
+      padding: 12px 16px;
+      border-radius: 20px;
+      max-width: 75%;
+      position: relative;
+      font-size: 1em;
+    }
+    .user {
+      text-align: right;
+      color: #006400; /* Dark green */
+      background: #E0FFE0; /* Light green */
+      margin-left: auto;
+    }
+    .bot {
+      text-align: left;
+      color: var(--primary-color);
+      background: #E0F6FF; /* Light blue */
+      margin-right: auto;
+    }
+    .bot::before {
+      content: '';
+      background: url('https://cdn-icons-png.flaticon.com/512/31/31069.png') no-repeat center;
+      background-size: contain;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .source {
+      font-size: 0.85em;
+      color: #666;
+      border-top: 1px dashed var(--border-color);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+    #input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #FFFFFF;
+      resize: vertical;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1em;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    #controls {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+    button:hover {
+      background: var(--accent-color);
+      transform: translateY(-2px);
+    }
+    label {
+      display: flex;
+      align-items: center;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    input[type="number"] {
+      width: 60px;
+      margin-left: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 6px;
+      font-size: 1em;
+    }
+    #header-image {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <img class="logo-left" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/%D8%A3%D8%B1%D9%83%D8%A7%D9%86_%D8%AC%D9%8A%D8%B4_%D8%A7%D9%84%D8%B7%D9%8A%D8%B1%D8%A7%D9%86%D8%8C_%D8%AA%D9%88%D9%86%D8%B3.svg" alt="Tunisian Air Force Emblem">
+  <img class="logo-right" src="https://upload.wikimedia.org/wikipedia/commons/9/91/%D8%B4%D8%B9%D8%A7%D8%B1_%D8%A7%D9%84%D9%82%D9%88%D8%A7%D8%AA_%D8%A7%D9%84%D9%85%D8%B3%D9%84%D8%AD%D8%A9_%D8%A7%D9%84%D8%AA%D9%88%D9%86%D8%B3%D9%8A%D8%A9.png" alt="Tunisian Armed Forces Emblem">
+  <header>
+    <img id="header-image" src="https://csis-website-prod.s3.amazonaws.com/s3fs-public/publication/201203_Airforce.jpg" alt="Cockpit Dashboard">
+    <h2>
+      <img src="https://cdn-icons-png.flaticon.com/512/31/31069.png" alt="Airplane Icon">
+      SkyLearn — Chatbot
+      <img src="https://cdn-icons-png.flaticon.com/512/31/31069.png" alt="Airplane Icon">
+    </h2>
+  </header>
+  <div id="chat"></div>
+
+  <textarea id="input" rows="3" placeholder="Pose ta question sur l'aviation..."></textarea>
+  <div id="controls">
+    <button id="sendBtn">Envoyer</button>
+    <label>Top-k: <input id="topk" type="number" value="5" min="1" max="10"></label>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
