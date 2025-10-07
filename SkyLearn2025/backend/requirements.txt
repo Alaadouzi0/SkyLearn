@@ -1,0 +1,10 @@
+flask
+flask-cors
+sentence-transformers
+faiss-cpu
+numpy
+pdfplumber
+tqdm
+transformers   # optionnel, si tu utilises transformers pipeline
+llama-cpp-python==0.1.*   # si tu utilises llama.cpp (adapter version)
+gpt4all                  # si tu veux utiliser GPT4All python binding alternative
